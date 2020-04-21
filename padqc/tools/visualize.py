@@ -1,6 +1,10 @@
+import os
 import sys
+import tempfile
 from copy import deepcopy
-import nxpd
+
+from networkx.drawing.nx_pydot import to_pydot
+from PIL import Image
 
 
 def circuit_drawer(q_circuit, filename=None, scale=0.7, show=False):
@@ -46,10 +50,19 @@ def circuit_drawer(q_circuit, filename=None, scale=0.7, show=False):
     for e in g.edges(data=True):
         e[2]['label'] = e[2]['name']
 
+    dot = to_pydot(g)
+
+    if filename:
+        dot.write_png(filename)
+        image = Image.open(filename)
+    else:
+        tmp_path = os.getcwd() + 'dag.png'
+        dot.write_png(tmp_path)
+        image = Image.open(tmp_path)
+
     if show is True:
         if ('ipykernel' in sys.modules) and ('spyder' not in sys.modules):
-            show = 'ipynb'
+            return image
         else:
-            show = True
-
-    return nxpd.draw(g, filename=filename, show=show)
+            image.show()
+    return image
