@@ -14,8 +14,8 @@ def circuit_drawer(q_circuit, filename=None, scale=0.7, show=False):
     See https://www.graphviz.org/
 
     Args:
-        show ():
-        q_graph (q_circuit.QCircuit): the circuit to plot
+        show (bool): if set to True, show the circuit
+        q_circuit (q_circuit.QCircuit): the circuit to plot
         filename (str): file path to save image
         scale (float): scaling factor
     """

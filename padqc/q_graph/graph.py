@@ -2,7 +2,7 @@ import networkx as nx
 
 from padqc.gates.single_q_gates import Hadamard, Id, Rx, Pauli_X, Pauli_Y, Pauli_Z, Ry, Rz, Measure
 from padqc.gates.two_q_gates import Cx
-from padqc.gates.base_gates import Input, Output, Classic, Barrier, DummyGate
+from padqc.gates.base_gates import Input, Output, Classic, Barrier
 from padqc.q_graph import Node
 from .exceptions import GraphError
 
@@ -236,8 +236,8 @@ class Graph:
         """Adds a CNOT gate between *control* and *target* logical qubits to the graph.
 
         Args:
-            control (tuple): the control logical qubit (q_reg_id, q_reg_index)
-            target (tuple): the target logical qubit (q_reg_id, q_reg_index)
+            c (tuple): the control logical qubit (q_reg_id, q_reg_index)
+            t (tuple): the target logical qubit (q_reg_id, q_reg_index)
         """
         self._append_node(type='gate', op=Cx(c, t))
 

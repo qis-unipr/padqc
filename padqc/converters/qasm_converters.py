@@ -26,13 +26,10 @@ def circuit_from_qasm(qasm):
     Returns:
         QCircuit: the QCircuit equivalent of the provided QASM circuit
     """
-    # print('QASM')
-    # print(qasm)
-    # QuantumCircuit.from_qasm_str(qasm).draw(filename='original.pdf', output='mpl', fold=200)
+
     pm = PassManager()
     pm.append(Unroller(['u3', 'cx']))
-    qasm = transpile(QuantumCircuit.from_qasm_str(qasm), pass_manager=pm,
-                     backend=Aer.get_backend('qasm_simulator')).qasm()
+    qasm = transpile(QuantumCircuit.from_qasm_str(qasm), pass_manager=pm).qasm()
     q_circuit = QCircuit()
     lines = list(qasm.split(';\n'))
     for line in lines:
@@ -157,18 +154,11 @@ def qasm_from_circuit(q_circuit, **kwargs):
                 params += str(node.gate.params[-1]) + ')'
             qasm += node.gate.name + params + ' '
             qasm += q_arg + ';\n'
-    # print('QASM FROM CIRCUIT')
-    # print(qasm)
     pm = PassManager()
     pm.append(Unroller(['u3', 'cx']))
     if 'optimize' in kwargs and kwargs['optimize'] is True:
         pm.append(Optimize1qGates())
-    qasm = transpile(QuantumCircuit.from_qasm_str(qasm), pass_manager=pm,
-                     backend=Aer.get_backend('qasm_simulator')
-                     ).qasm()
-    # print('OPTIMIZED')
-    # print(qasm)
-    # QuantumCircuit.from_qasm_str(qasm).draw(filename='final.pdf', output='mpl', fold=200)
+    qasm = transpile(QuantumCircuit.from_qasm_str(qasm), pass_manager=pm).qasm()
     return qasm
 
 

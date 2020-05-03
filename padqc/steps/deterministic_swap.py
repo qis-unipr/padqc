@@ -4,7 +4,7 @@ from copy import deepcopy
 from networkx import topological_sort
 
 from padqc.q_circuit import QCircuit
-from padqc.gates import Cx, Hadamard, Rz, Ry, Rx
+from padqc.gates import Cx, Rz, Ry, Rx
 from padqc.gates.single_q_gates import Measure
 from padqc.gates.base_gates import Input, Output, Classic, Barrier, DummyGate
 from padqc.q_graph import Graph, Node
