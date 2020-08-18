@@ -16,6 +16,7 @@ class Patterns(TransformationStep):
         self._layers = None
         self._extra_layers = None
         self._skip = []
+        self.patterns = 0
 
     def run(self, q_circuit):
         """Executes the transformation step.
@@ -31,6 +32,7 @@ class Patterns(TransformationStep):
                 self._id_to_wires[i] = (q_reg['id'], q)
                 i += 1
         self.find_pattern(q_circuit)
+        q_circuit.patterns = self.patterns
 
     def find_pattern(self, q_circuit):
         """Finds specific two-qubit gate patterns in *q_circuit*
@@ -66,22 +68,28 @@ class Patterns(TransformationStep):
                 # every cnot could be the starting point for a CNOT cascade
                 elif node.name == 'cx':
                     # check for a CNOT cascade
+                    # print('Checking Cascade')
                     temp = self.check_cascade(node, i)
                     if temp is not None:
                         self._skip.extend(temp)
+                        # print('Found Cascade')
+                        self.patterns += 1
                     else:
                         # check for an inverted CNOT cascade
+                        # print('Checking Inverse Cascade')
                         temp = self.check_inverse_cascade(node, i)
                         if temp is not None:
                             self._skip.extend(temp)
+                            # print('Found Inverse Cascade')
+                            self.patterns += 1
                         else:
                             # apply the CNOT if no cascade was found
                             self._skip.append(node)
                             new_graph._append_node(node.type, node.gate)
                 else:
-                    self._skip.append(node)
-                    new_graph._append_node(node.type, node.gate)
-
+                    if node.type == 'gate':
+                        self._skip.append(node)
+                        new_graph._append_node(node.type, node.gate)
         q_circuit.q_graph = new_graph
 
     def check_cascade(self, node, layer_id):
@@ -114,7 +122,7 @@ class Patterns(TransformationStep):
         if control > target:
             descending = True
 
-        count = 0
+        count = 1
         last_layer = layer_id
 
         double_break = False
@@ -128,6 +136,7 @@ class Patterns(TransformationStep):
                             break
                 else:
                     if node.name == 'cx':
+                        # print('CX: ', node.q_args)
                         g_control = self._wires_to_id[node.q_args[0]]
                         g_target = self._wires_to_id[node.q_args[1]]
                         if g_control == target:
@@ -146,6 +155,7 @@ class Patterns(TransformationStep):
                         b = (descending is True and g_control > target) \
                             or (descending is False and g_control < target)
                         if a and b:
+                            # print('Adding to Cascade')
                             controls.append(g_control)
                             used.add(g_control)
                             skip.append(node)
@@ -212,6 +222,7 @@ class Patterns(TransformationStep):
                                     used.add(qarg)
                                     off_limits.add(qarg)
                         else:
+                            # print(node.name, node.q_args)
                             # check if one-qubits gates either interrupt the cascade,
                             # can be applied after or before
                             qarg = self._wires_to_id[node.q_args[0]]
@@ -221,10 +232,12 @@ class Patterns(TransformationStep):
                                 double_break = True
                                 break
                             if qarg not in used:
+                                # print('Before')
                                 if qarg not in before:
                                     before[qarg] = []
                                 before[qarg].append(node)
                             else:
+                                # print('After')
                                 after.append(node)
                             skip.append(node)
             count += 1
@@ -292,7 +305,7 @@ class Patterns(TransformationStep):
         if target > control:
             descending = True
 
-        count = 0
+        count = 1
         last_layer = layer_id
 
         double_break = False

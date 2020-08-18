@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+padqc/steps/old_chian_layout.py
 develop-eggs/
 downloads/
 eggs/

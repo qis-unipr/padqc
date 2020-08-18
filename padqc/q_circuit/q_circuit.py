@@ -19,6 +19,7 @@ class QCircuit:
         self._properties['regs_to_physical'] = self._regs_to_phys_q
         self._properties['q_regs'] = self.q_regs
         self._properties['c_regs'] = self.c_regs
+        self.patterns = 0
 
     @property
     def properties(self):
