@@ -4,7 +4,7 @@ from os import path
 
 from qiskit import QuantumCircuit
 from qiskit.converters import circuit_to_dag
-from qiskit.extensions.standard import SwapGate
+from qiskit.circuit.library.standard_gates import SwapGate
 from qiskit.test.mock import FakeTokyo
 from qiskit.transpiler import CouplingMap, PassManager, Layout
 from qiskit.transpiler.passes import *
@@ -82,6 +82,7 @@ for file in os.listdir(directory):
     pass_manager.append(depth_check + opt, do_while=opt_control)
 
     qc_compiled = pass_manager.run(qc_compiled)
+
     depth = qc_compiled.depth()
     n_cx = len(circuit_to_dag(qc_compiled).two_qubit_ops())
     n_gates = len(circuit_to_dag(qc_compiled).gate_nodes())
