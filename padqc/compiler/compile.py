@@ -18,7 +18,7 @@ def compile(q_circuit, steps=None, iterate=False, layout=None, explicit=False):
         iterate (bool): if set to True, cancellation steps will be executed recursively
             until no further cancellation can be achieved. Defaults to False.
     """
-
+    
     properties = q_circuit._properties
     properties['circuit'] = q_circuit
     if layout is not None:
