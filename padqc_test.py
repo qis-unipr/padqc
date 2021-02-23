@@ -8,6 +8,8 @@ from padqc import compile
 from padqc.converters import qasm_from_circuit, circuit_from_qasm
 from padqc.steps import ChainLayout, Patterns, CancelCx, CancelH, MergeBarrier
 
+# Tested with qiskit 0.21.0
+
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
