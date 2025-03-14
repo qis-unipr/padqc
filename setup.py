@@ -11,7 +11,7 @@ setup(
     author='Davide Ferrari, Michele Amoretti',
     author_email='davide.ferrari8@studenti.unipr.it, michele.amoretti@unipr.it',
     description='Pattern-oriented Deterministic Quantum Compiler',
-    install_requires=['networkx', 'pillow', 'pydot', 'qiskit==0.21', 'pulp'],
+    install_requires=['networkx', 'pillow', 'pydot', 'qiskit==1.4.2', 'pulp'],
     classifiers=[
             "Programming Language :: Python :: 3.6",
             "Operating System :: OS Independent",
